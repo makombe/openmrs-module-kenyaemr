@@ -291,7 +291,6 @@ public class RegimenUtilFragmentController {
 				if ((changeType == RegimenChangeType.START || changeType == RegimenChangeType.RESTART) && onRegimen) {
 					errors.reject("Can't start regimen for patient who is already on a regimen");
 				}
-
 				// Changes must be in order
 				if (lastChange != null && OpenmrsUtil.compare(changeDate, lastChange.getDate()) <= 0) {
 					errors.rejectValue("changeDate", "Change date must be after all other changes");
