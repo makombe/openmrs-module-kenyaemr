@@ -55,31 +55,20 @@
                     name: 'Total Patients',
                     y:${allPatients},
 
-                }, {
-                    name: 'Total enrolled in HIV',
-                    y: ${cumulativeEnrolledInHiv},
-
-                }, {
+                },  {
                     name: 'Current in Care',
                     y: ${inCare},
 
-                }, {
-                    name: 'Current on ART',
-                    y: ${onArt},
-
-                }, {
+                },  {
                     name: 'Newly Enrolled',
                     y: ${newlyEnrolledInHiv},
 
-                }, {
-                    name: 'New on ART',
-                    y: ${newOnArt},
                 }]
             }],
         });
     });
 
-    jQuery(function () {
+   /* jQuery(function () {
         jQuery('#viral_load_tracker').highcharts({
             chart: {
                 type: 'column'
@@ -120,23 +109,10 @@
             series: [{
                 name: 'Statistics',
                 colorByPoint: true,
-                data: [{
-
-                    name: 'Total clients with viral loads',
-                    y:${vlResults},
-
-                }, {
-                    name: 'Total Unsuppressed',
-                    y: ${vlResults - suppressedVl},
-
-                }, {
-                    name: 'Total Suppressed',
-                    y: ${suppressedVl},
-
-                }]
+                data: []
             }],
         });
-    });
+    });*/
 
     jQuery(function () {
         jQuery('#hts_tracker').highcharts({
@@ -241,17 +217,7 @@
                     {y:${htsTestedIDU},color:"#7cb5ec"}, {y:${htsPositiveIDU},color:"#434348"},{y:${htsUnknownStatusIDU},color:"#90ed7d"}, {y:${htsLinkedIDU},color:"#f7a35c"}]
             }],
             xAxis: {
-                categories: [{
-                    name: "Family contacts",
-                    categories: ["Total Tested", "HIV+","Unknown status","Linked"]
-                }, {
-                    name: "Sex partners",
-                    categories: ["Total Tested", "HIV+","Unknown status","Linked"]
-                }, {
-                    name: "Injectable Drug Users",
-                    categories: ["Total Tested", "HIV+","Unknown status","Linked"]
-                },
-                ]
+                categories: []
             },
         });
     });
