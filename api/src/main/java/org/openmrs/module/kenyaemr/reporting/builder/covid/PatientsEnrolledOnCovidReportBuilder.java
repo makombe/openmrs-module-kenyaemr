@@ -21,6 +21,7 @@ import org.openmrs.module.kenyaemr.calculation.library.covid.PersonAddressCounty
 import org.openmrs.module.kenyaemr.calculation.library.covid.PersonAddressSubCountyCalculation;
 import org.openmrs.module.kenyaemr.metadata.CommonMetadata;
 import org.openmrs.module.kenyaemr.metadata.HivMetadata;
+import org.openmrs.module.kenyaemr.regimen.Regimen;
 import org.openmrs.module.kenyaemr.reporting.calculation.converter.RDQACalculationResultConverter;
 import org.openmrs.module.kenyaemr.reporting.cohort.definition.covid.PatientsEnrolledOnCovidCohortDefinition;
 import org.openmrs.module.kenyaemr.reporting.data.converter.IdentifierConverter;
@@ -60,8 +61,9 @@ public class PatientsEnrolledOnCovidReportBuilder extends AbstractHybridReportBu
         CohortDefinition cd = new PatientsEnrolledOnCovidCohortDefinition();
         cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
         cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+        cd.addParameter(new Parameter("county", "County", String.class));
         cd.setName("CovidPatients");
-        return ReportUtils.map(cd, "startDate=${startDate},endDate=${endDate}");
+        return ReportUtils.map(cd, "startDate=${startDate},endDate=${endDate},county=${county}");
     }
 
     @Override
@@ -81,7 +83,8 @@ public class PatientsEnrolledOnCovidReportBuilder extends AbstractHybridReportBu
         return Arrays.asList(
                 new Parameter("startDate", "Start Date", Date.class),
                 new Parameter("endDate", "End Date", Date.class),
-                new Parameter("dateBasedReporting", "", String.class)
+                new Parameter("dateBasedReporting", "", String.class),
+                new Parameter("county", "", String.class)
         );
     }
 

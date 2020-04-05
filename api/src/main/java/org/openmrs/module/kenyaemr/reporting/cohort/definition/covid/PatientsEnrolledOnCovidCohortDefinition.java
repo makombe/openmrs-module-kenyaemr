@@ -28,6 +28,8 @@ public class PatientsEnrolledOnCovidCohortDefinition extends BaseCohortDefinitio
 
     @ConfigurationProperty
     private Date endDate;
+    @ConfigurationProperty
+    private String county;
 
     public PatientsEnrolledOnCovidCohortDefinition() {
     }
@@ -46,6 +48,14 @@ public class PatientsEnrolledOnCovidCohortDefinition extends BaseCohortDefinitio
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+
+    public String getCounty() {
+        return county;
+    }
+
+    public void setCounty(String county) {
+        this.county = county;
     }
 
 }

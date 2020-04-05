@@ -70,6 +70,10 @@ public class PatientsEnrolledOnCovidCohortDefinitionEvaluator implements CohortD
         builder.append(qry);
         Date startDate = (Date) context.getParameterValue("startDate");
         Date endDate = (Date) context.getParameterValue("endDate");
+        String county = (String) context.getParameterValue("county");
+        System.out.println("county=============================="+county);
+        System.out.println("endDate=============================="+endDate);
+        System.out.println("startDate=============================="+startDate);
         builder.addParameter("endDate", endDate);
         builder.addParameter("startDate", startDate);
 

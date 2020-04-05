@@ -102,6 +102,12 @@
 		</div>
 		<% } %>
 
+		<div class="ke-field-label">County</div>
+		<div class="ke-field-content">
+
+			${ ui.includeFragment("kenyaemr", "field/reportCounty") }
+		</div>
+
 		<% params.each { name, param -> %>
 		<div class="ke-field-label">${ param.label }</div>
 		<div class="ke-field-content">
