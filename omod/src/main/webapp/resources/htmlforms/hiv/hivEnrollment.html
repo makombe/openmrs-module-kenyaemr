@@ -521,6 +521,10 @@
 						<includeIf velocityTest="$kenyaemr.hasHivUniquePatientNumber() == true">
 							Enrollment date: <encounterDate id="encounter-date" showTime="true" />
 						</includeIf>
+						<span>
+                            <button type="button" id="btnGenerateIdentifier">Remove visit ID</button>
+                        </span>
+
 					</ifMode>
 					<ifMode mode="ENTER">
 						<includeIf velocityTest="$kenyaemr.hasHivUniquePatientNumber() == true">
