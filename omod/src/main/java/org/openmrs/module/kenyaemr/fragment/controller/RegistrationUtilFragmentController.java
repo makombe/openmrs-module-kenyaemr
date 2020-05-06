@@ -131,6 +131,25 @@ public class RegistrationUtilFragmentController {
 	}
 
 	/**
+	 * Edits an existing visit for program enrollments
+	 * @param ui the UI utils
+	 * @param visit the visit
+	 * @return the simplified visit
+	 */
+	@SharedAction({EmrConstants.APP_REGISTRATION, EmrConstants.APP_INTAKE, EmrConstants.APP_CLINICIAN, EmrConstants.APP_HIV_TESTING, EmrConstants.APP_PREP,EmrConstants.APP_KP})
+	public SimpleObject editProgramEnrollmentVisit(@RequestParam("visitId") Visit visit, @RequestParam("stopDatetime") Date stopDatetime,
+								  @RequestParam("startDatetime") Date startDatetime,UiUtils ui) {
+		visit.setStartDatetime(startDatetime);
+		visit.setStopDatetime(stopDatetime);
+
+		ui.validate(visit, new StartVisitValidator(), "visit");
+		ui.validate(visit, new StopVisitValidator(), null);
+
+		Context.getVisitService().saveVisit(visit);
+		return ui.simplifyObject(visit);
+	}
+
+	/**
 	 * Validation for starting visits
 	 */
 	public class StartVisitValidator implements Validator {
@@ -150,6 +169,10 @@ public class RegistrationUtilFragmentController {
 			if (visit.getStartDatetime().after(new Date())) {
 				errors.rejectValue("startDatetime", "Start date cannot be in the future");
 			}
+			if (visit.getStopDatetime() != null && visit.getStopDatetime().before(visit.getStartDatetime())) {
+				errors.rejectValue("stopDatetime", "Stop date cannot be before start date");
+			}
+
 		}
 	}
 
@@ -172,6 +195,10 @@ public class RegistrationUtilFragmentController {
 			if (visit.getStopDatetime() != null && visit.getStopDatetime().after(new Date())) {
 				errors.rejectValue("stopDatetime", "Stop date cannot be in the future");
 			}
+			if (visit.getStartDatetime().after(visit.getStopDatetime())) {
+				errors.rejectValue("startDatetime", "Start date cannot be after stop date");
+			}
+
 		}
 	}
 }

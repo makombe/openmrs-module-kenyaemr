@@ -39,9 +39,31 @@
 <div class="ke-panel-footer">
 	<% if (currentEnrollment) { %>
 
-	<button type="button" onclick="ui.navigate('${ ui.pageLink("kenyaemr", "enterForm", [ patientId: patient.id, formUuid: defaultCompletionForm.targetUuid, appId: currentApp.id, returnUrl: ui.thisUrl() ]) }')">
+	<% if (visitId) { %>
+	<%= ui.includeFragment("kenyaui", "widget/dialogForm", [
+			buttonConfig: [ label: "Edit Visit", iconProvider: "kenyaui", icon: "glyphs/edit.png" ],
+			dialogConfig: [ heading: "Edit ${ProgramName} enrollment visit", width: 50, height: 30 ],
+			fields: [
+					[ hiddenInputName: "visitId", value: visitId ],
+					[ hiddenInputName: "appId", value: currentApp.id ],
+					[ label: "Start Date and Time", formFieldName: "startDatetime", class: java.util.Date, initialValue: startDate, showTime: true ],
+
+					[ label: "End Date and Time", formFieldName: "stopDatetime", class: java.util.Date, initialValue: stopDate, showTime: true ]
+			],
+			fragmentProvider: "kenyaemr",
+			fragment: "registrationUtil",
+			action: "editProgramEnrollmentVisit",
+			onSuccessCallback: "ui.reloadPage()",
+			submitLabel: ui.message("general.submit"),
+			cancelLabel: ui.message("general.cancel")
+	]) %>
+	<% }  %>
+	<button type="button" style="padding-right: 10px" onclick="ui.navigate('${ ui.pageLink("kenyaemr", "enterForm", [ patientId: patient.id, formUuid: defaultCompletionForm.targetUuid, appId: currentApp.id, returnUrl: ui.thisUrl() ]) }')">
 		<img src="${ ui.resourceLink("kenyaui", "images/glyphs/discontinue.png") }" /> Discontinue
 	</button>
+
+
+
 
 	<% } else if (patientIsEligible) { %>
 
