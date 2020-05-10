@@ -127,7 +127,33 @@
             // jq('#transfer-details :input').prop('disabled', true);
             //jq('#hiv-id :input').prop('disabled', true);
             //jq('#baseline-fieldset :input').prop('disabled', true);
+			jq("#btnGenerateIdentifier").click(function(e){
+				console.log("Visit button is clicked=====")
+				generateIdentifier()
+			});
         });
+
+
+		function generateIdentifier() {
+			var patientId = <lookup expression="patient.patientId"/>;
+		//	var encDate = getValue('encounter-date.value');
+			var encounterName="HIV enrollment";
+
+			var userId = <lookup expression="user.userId"/>;
+
+				jq.getJSON('/' + ctxPath + '/kenyaemr/emrUtils/removeVisitIdFromEncounter.action', {
+					patientId: patientId,
+					encounterName: encounterName.toString(),
+					userId: userId
+				}, function (data,e) {
+					if (data.status == "Success") {
+						console.log("success ======")
+
+						jq("#lblIdentifierStatus").text(data.message).addClass("ke-success-label");
+					} else {
+					}
+				});
+		}
 
         function checkForExistingPatientIdentifiers() {
             var upnEntered = jq('#hiv-id input[type=text]').val();

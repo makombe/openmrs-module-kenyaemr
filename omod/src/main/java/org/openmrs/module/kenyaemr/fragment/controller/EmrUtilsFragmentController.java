@@ -11,26 +11,8 @@ package org.openmrs.module.kenyaemr.fragment.controller;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openmrs.Concept;
-import org.openmrs.Encounter;
-import org.openmrs.Form;
-import org.openmrs.GlobalProperty;
-import org.openmrs.Location;
-import org.openmrs.Obs;
-import org.openmrs.Patient;
-import org.openmrs.PatientIdentifier;
-import org.openmrs.PatientIdentifierType;
-import org.openmrs.PatientProgram;
-import org.openmrs.Relationship;
-import org.openmrs.User;
-import org.openmrs.Visit;
-import org.openmrs.VisitAttribute;
-import org.openmrs.VisitAttributeType;
-import org.openmrs.VisitType;
-import org.openmrs.api.ConceptService;
-import org.openmrs.api.EncounterService;
-import org.openmrs.api.PatientService;
-import org.openmrs.api.ProgramWorkflowService;
+import org.openmrs.*;
+import org.openmrs.api.*;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.context.ContextAuthenticationException;
 import org.openmrs.calculation.result.CalculationResult;
@@ -691,6 +673,44 @@ public SimpleObject lastLotNumberUsedForHTSTesting(@RequestParam(value = "kitNam
 			return SimpleObject.create("status", "Error","message","There was an error updating IPT followup details");
 		}
 	}
+
+
+	public SimpleObject removeVisitIdFromEncounter(@RequestParam("patientId") Patient patient,
+												   @RequestParam("userId") User loggedInUser,
+												   @RequestParam("encounterName") String encounterName) {
+		EncounterService encounterService = Context.getEncounterService();
+		FormService formService = Context.getFormService();
+
+		EncounterType et = encounterService.getEncounterTypeByUuid(HivMetadata._EncounterType.HIV_ENROLLMENT);
+		Form pform = formService.getFormByUuid(HivMetadata._Form.HIV_ENROLLMENT);
+		Encounter lastHivEnrollmentEnc = EmrUtils.lastEncounter(patient,et ,pform );
+		if(lastHivEnrollmentEnc != null){
+			lastHivEnrollmentEnc.setPatient(patient);
+			lastHivEnrollmentEnc.setCreator(loggedInUser);
+			//Visit s = lastHivEnrollmentEnc.getVisit();
+					//.setVisitId(null);
+			lastHivEnrollmentEnc.setVisit(null);
+
+		}
+
+
+
+
+
+
+		try {
+			encounterService.saveEncounter(lastHivEnrollmentEnc);
+			System.out.println("Saved successfully=============");
+
+			return SimpleObject.create("status", "Success", "message", "Identifier generated successfully");
+		}
+		catch (Exception e) {
+			System.out.println("Throwing an error======"+e);
+			e.printStackTrace();
+			return SimpleObject.create("status", "Error", "message", "There was an error generating identifier details");
+		}
+	}
+
 
 	/**
 	 * Does the actual assignment of the encounter to a visit
