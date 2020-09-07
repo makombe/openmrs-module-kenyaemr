@@ -41,6 +41,7 @@ public class EmrExternalUrlInterceptor extends HandlerInterceptorAdapter {
 			"org.openmrs.module.kenyaemr",
 			"org.openmrs.module.uiframework",
 			"org.openmrs.module.sync2",
+			"org.openmrs.module.atomfeed",
 			"org.openmrs.module.webservices.rest"
 	};
 
