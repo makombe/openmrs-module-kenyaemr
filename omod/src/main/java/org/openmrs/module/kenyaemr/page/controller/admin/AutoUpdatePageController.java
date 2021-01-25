@@ -9,6 +9,10 @@
  */
 package org.openmrs.module.kenyaemr.page.controller.admin;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ObjectNode;
 import org.openmrs.api.context.Context;
@@ -18,6 +22,13 @@ import org.openmrs.module.kenyaui.annotation.AppPage;
 import org.openmrs.ui.framework.page.PageModel;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.ssl.SSLContexts;
+import org.apache.http.util.EntityUtils;
+import org.apache.http.HttpEntity;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -38,7 +49,6 @@ import java.util.Date;
 @AppPage(EmrConstants.APP_ADMIN)
 public class AutoUpdatePageController {
     public static final String AUTO_UPDATE_RELEASE_URL = "kenyaemr.autoUpdateReleaseUrl";
-    private static String latestReleaseUrl = Context.getAdministrationService().getGlobalProperty(AUTO_UPDATE_RELEASE_URL);
     private static final DateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy");
     private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     private final Log log = LogFactory.getLog(AutoUpdatePageController.class);
@@ -99,7 +109,55 @@ public class AutoUpdatePageController {
 
 
     private static String getLatestRelease() throws IOException {
-        URL obj = new URL(latestReleaseUrl);
+        String latestReleaseUrl = Context.getAdministrationService().getGlobalProperty(AUTO_UPDATE_RELEASE_URL);
+        SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(
+                SSLContexts.createDefault(),
+                new String[] { "TLSv1.2"},
+                null,
+                SSLConnectionSocketFactory.getDefaultHostnameVerifier());
+       // CloseableHttpClient httpClient = HttpClients.createDefault();
+        CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(sslsf).build();
+        try {
+            //Define a getRequest request
+            HttpGet getRequest = new HttpGet(latestReleaseUrl);
+            getRequest.addHeader("content-type", "application/json");
+            CloseableHttpResponse response = httpClient.execute(getRequest);
+            int statusCode = response.getStatusLine().getStatusCode();
+            if (statusCode != 200) {
+                throw new RuntimeException("Failed with HTTP error code : " + statusCode);
+            }
+            String result =null;
+            try {
+
+                // Get HttpResponse Status
+                System.out.println("protocal version=============="+response.getProtocolVersion());              // HTTP/1.1
+                System.out.println("Statuscode=============="+response.getStatusLine().getStatusCode());   // 200
+                System.out.println("phrase=============="+response.getStatusLine().getReasonPhrase()); // OK
+                System.out.println("status line=============="+response.getStatusLine().toString());        // HTTP/1.1 200 OK
+
+                HttpEntity entity = response.getEntity();
+                if (entity != null) {
+                    // return it as a String
+                    result = EntityUtils.toString(entity);
+                }
+
+            } finally {
+                 response.close();
+            }
+
+            System.out.println("System response is ==================="+ result);
+
+            return result;
+
+
+
+
+
+        } finally {
+            httpClient.close();
+        }
+
+        /*URL obj = new URL(latestReleaseUrl);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
         con.setRequestMethod("GET");
         int responseCode = con.getResponseCode();
@@ -117,7 +175,7 @@ public class AutoUpdatePageController {
         } else {
             System.out.println("GET request not worked");
         }
-        return response.toString();
+        return response.toString();*/
 
     }
 

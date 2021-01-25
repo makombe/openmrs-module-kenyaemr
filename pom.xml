@@ -14,7 +14,7 @@
 
     <groupId>org.openmrs.module</groupId>
     <artifactId>kenyaemr</artifactId>
-    <version>17.3.0-SNAPSHOT</version>
+    <version>17.3.0</version>
     <packaging>pom</packaging>
     <name>KenyaEMR</name>
     <description>OpenMRS-based EMR for Kenya</description>
@@ -69,6 +69,8 @@
         <serializationxstreamVersion>0.2.7</serializationxstreamVersion>
         <uiframeworkVersion>3.8</uiframeworkVersion>
         <facilityReportingVersion>1.0.0</facilityReportingVersion>
+        <apacheHttpClientVersion>4.5.10</apacheHttpClientVersion>
+
         <!--
         <kenyaemrChartsVersion>1.0</kenyaemrChartsVersion>
         <kenyaemrHivTestingVersion>1.0</kenyaemrHivTestingVersion>-->
@@ -274,6 +276,19 @@
             <version>2.1</version>
             <type>jar</type>
             <scope>compile</scope>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>${apacheHttpClientVersion}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
