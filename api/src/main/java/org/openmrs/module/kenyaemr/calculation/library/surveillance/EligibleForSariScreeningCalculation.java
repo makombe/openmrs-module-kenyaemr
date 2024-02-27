@@ -7,7 +7,7 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.kenyaemr.calculation.library;
+package org.openmrs.module.kenyaemr.calculation.library.surveillance;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
@@ -19,7 +19,6 @@ import org.openmrs.api.context.Context;
 import org.openmrs.calculation.patient.PatientCalculationContext;
 import org.openmrs.calculation.result.CalculationResultMap;
 import org.openmrs.module.kenyacore.calculation.*;
-import org.openmrs.module.kenyaemr.Dictionary;
 import org.openmrs.module.kenyaemr.calculation.EmrCalculationUtils;
 import org.openmrs.module.kenyaemr.metadata.CommonMetadata;
 import org.openmrs.module.kenyaemr.metadata.HivMetadata;
@@ -36,6 +35,7 @@ import java.util.*;
  * @should calculate fever for <= 10 days
  * @should calculate temperature  for >= 38.0 same day
  * @should calculate admitted
+ * @should calculate duration < 10 days
  */
 public class EligibleForSariScreeningCalculation extends AbstractPatientCalculation implements PatientFlagCalculation {
     protected static final Log log = LogFactory.getLog(EligibleForSariScreeningCalculation.class);
@@ -52,14 +52,11 @@ public class EligibleForSariScreeningCalculation extends AbstractPatientCalculat
     }
     Integer MEASURE_FEVER = 140238;
     Integer COUGH_PRESENCE = 143264;
-    Integer ONSET_DATE = 159948;
+    Integer DURATION = 159368;
     Integer SCREENING_QUESTION = 5219;
     Integer TEMPERATURE = 5088;
     Integer PATIENT_OUTCOME = 160433;
     Integer INPATIENT_ADMISSION = 1654;
-    /**
-     * Evaluates the calculation
-     */
 
     @Override
     public CalculationResultMap evaluate(Collection<Integer> cohort, Map<String, Object> parameterValues, PatientCalculationContext context) {
@@ -72,12 +69,7 @@ public class EligibleForSariScreeningCalculation extends AbstractPatientCalculat
             boolean eligible = false;
             Date currentDate = new Date();
             Double tempValue = 0.0;
-            Integer triageDateDifference = 0;
-            Integer greenCardDateDifference = 0;
-            Integer clinicalEncounterDateDifference = 0;
-            Date triageOnsetDate = null;
-            Date greenCardOnsetDate = null;
-            Date clinicalEnounterOnsetDate = null;
+            Double duration = 0.0;
             Date dateCreated = null;
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             String todayDate = dateFormat.format(currentDate);
@@ -113,18 +105,17 @@ public class EligibleForSariScreeningCalculation extends AbstractPatientCalculat
                 if (patientFeverResult && patientCoughResult) {
                     for (Obs obs : lastTriageEnc.getObs()) {
                         dateCreated = obs.getDateCreated();
-                        if (obs.getConcept().getConceptId().equals(ONSET_DATE)) {
-                            triageOnsetDate = obs.getValueDatetime();
-                            triageDateDifference = daysBetween(currentDate, triageOnsetDate);
+                        if (obs.getConcept().getConceptId().equals(DURATION)) {
+                            duration = obs.getValueNumeric();
                         }
                         if (dateCreated != null) {
                             String createdDate = dateFormat.format(dateCreated);
-                            if (triageDateDifference <= 10 && tempValue != null && tempValue >= 38.0) {
-                                if (createdDate != null && createdDate.equals(todayDate)) {
+                            if ((duration > 0.0 && duration < 10) && tempValue != null && tempValue >= 38.0) {
+                                if (createdDate.equals(todayDate)) {
                                     if (patientAdmissionStatus) {
                                         eligible = true;
+                                        break;
                                     }
-                                    break;
                                 }
                             }
                         }
@@ -136,18 +127,17 @@ public class EligibleForSariScreeningCalculation extends AbstractPatientCalculat
                 if (patientFeverResultGreenCard && patientCoughResultGreenCard) {
                     for (Obs obs : lastFollowUpEncounter.getObs()) {
                         dateCreated = obs.getDateCreated();
-                        if (obs.getConcept().getConceptId().equals(ONSET_DATE)) {
-                            greenCardOnsetDate = obs.getValueDatetime();
-                            greenCardDateDifference = daysBetween(currentDate, greenCardOnsetDate);
+                        if (obs.getConcept().getConceptId().equals(DURATION)) {
+                            duration = obs.getValueNumeric();
                         }
                         if (dateCreated != null) {
                             String createdDate = dateFormat.format(dateCreated);
-                            if (greenCardDateDifference <= 10 && tempValue != null && tempValue >= 38.0) {
-                                if (createdDate != null && createdDate.equals(todayDate)) {
+                            if ((duration > 0.0 && duration < 10) && tempValue != null && tempValue >= 38.0) {
+                                if (createdDate.equals(todayDate)) {
                                     if (patientAdmissionStatus) {
                                         eligible = true;
+                                        break;
                                     }
-                                    break;
                                 }
                             }
                         }
@@ -158,18 +148,17 @@ public class EligibleForSariScreeningCalculation extends AbstractPatientCalculat
                 if (patientFeverResultClinical && patientCoughResultClinical) {
                     for (Obs obs : lastClinicalEncounter.getObs()) {
                         dateCreated = obs.getDateCreated();
-                        if (obs.getConcept().getConceptId().equals(ONSET_DATE)) {
-                            clinicalEnounterOnsetDate = obs.getValueDatetime();
-                            clinicalEncounterDateDifference = daysBetween(currentDate, clinicalEnounterOnsetDate);
+                        if (obs.getConcept().getConceptId().equals(DURATION)) {
+                            duration = obs.getValueNumeric();
                         }
                         if (dateCreated != null) {
                             String createdDate = dateFormat.format(dateCreated);
-                            if (clinicalEncounterDateDifference <= 10 && tempValue != null && tempValue >= 38.0) {
-                                if (createdDate != null && createdDate.equals(todayDate)) {
+                            if ((duration > 0.0 && duration < 10) && tempValue != null && tempValue >= 38.0) {
+                                if (createdDate.equals(todayDate)) {
                                     if (patientAdmissionStatus) {
                                         eligible = true;
+                                        break;
                                     }
-                                    break;
                                 }
                             }
                         }
@@ -182,9 +171,5 @@ public class EligibleForSariScreeningCalculation extends AbstractPatientCalculat
 
         return ret;
     }
-    private int daysBetween(Date date1, Date date2) {
-        DateTime d1 = new DateTime(date1.getTime());
-        DateTime d2 = new DateTime(date2.getTime());
-        return Math.abs(Days.daysBetween(d1, d2).getDays());
-    }
+
 }

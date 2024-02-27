@@ -83,7 +83,15 @@ public class PatientUtilsFragmentController {
 				"NotVaccinatedCalculation",
 				"IsPregnantCalculation",
 				"EligibleForIliScreeningCalculation",
-				"EligibleForSariScreeningCalculation"
+				"EligibleForSariScreeningCalculation",
+				"EligibleForCholeraCalculation",
+				"EligibleForDysenteryCalculation",
+				"EligibleForMalariaCalculation",
+				"EligibleForHaemorrhagicCalculation",
+				"EligibleForChikungunyaCalculation",
+				"EligibleForMeaslesCalculation",
+				"EligibleForPoliomyelitisCalculation",
+				"EligibleForRiftValleyFeverCalculation"
 		); // flags that don't require specific role
 		// Gather all flag calculations that evaluate to true
 		for (PatientFlagCalculation calc : calculationManager.getFlagCalculations()) {

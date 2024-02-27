@@ -18,7 +18,7 @@ import org.openmrs.module.reporting.evaluation.caching.Caching;
  * Malaria cohort definition
  */
 @Caching(strategy = ConfigurationPropertyCachingStrategy.class)
-@Localized("reporting.AppointmentsAndAttritionCohortDefinition")
+@Localized("reporting.MalariaCohortDefinition")
 public class MalariaCohortDefinition extends BaseCohortDefinition {
 	
 }

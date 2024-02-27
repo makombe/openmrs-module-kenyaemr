@@ -18,7 +18,7 @@ import org.openmrs.module.reporting.evaluation.caching.Caching;
  * Viral Haemorrhagic Fever cohort definition
  */
 @Caching(strategy = ConfigurationPropertyCachingStrategy.class)
-@Localized("reporting.AppointmentsAndAttritionCohortDefinition")
+@Localized("reporting.ViralHaemorrhagicFeverCohortDefinition")
 public class ViralHaemorrhagicFeverCohortDefinition extends BaseCohortDefinition {
 	
 }

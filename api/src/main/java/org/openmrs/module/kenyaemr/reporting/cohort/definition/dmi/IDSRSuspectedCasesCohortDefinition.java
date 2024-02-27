@@ -18,7 +18,7 @@ import org.openmrs.module.reporting.evaluation.caching.Caching;
  * Surveillance cases cohort definition
  */
 @Caching(strategy = ConfigurationPropertyCachingStrategy.class)
-@Localized("reporting.AppointmentsAndAttritionCohortDefinition")
+@Localized("reporting.IDSRSuspectedCasesCohortDefinition")
 public class IDSRSuspectedCasesCohortDefinition extends BaseCohortDefinition {
 	
 }

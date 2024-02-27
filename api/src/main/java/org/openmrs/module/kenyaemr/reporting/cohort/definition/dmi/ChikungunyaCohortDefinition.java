@@ -18,7 +18,7 @@ import org.openmrs.module.reporting.evaluation.caching.Caching;
  * Chikungunya cohort definition
  */
 @Caching(strategy = ConfigurationPropertyCachingStrategy.class)
-@Localized("reporting.AppointmentsAndAttritionCohortDefinition")
+@Localized("reporting.ChikungunyaCohortDefinition")
 public class ChikungunyaCohortDefinition extends BaseCohortDefinition {
 	
 }

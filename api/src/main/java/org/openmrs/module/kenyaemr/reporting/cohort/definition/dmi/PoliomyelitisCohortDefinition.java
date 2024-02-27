@@ -18,7 +18,7 @@ import org.openmrs.module.reporting.evaluation.caching.Caching;
  * Poliomyelitis cohort definition
  */
 @Caching(strategy = ConfigurationPropertyCachingStrategy.class)
-@Localized("reporting.AppointmentsAndAttritionCohortDefinition")
+@Localized("reporting.PoliomyelitisCohortDefinition")
 public class PoliomyelitisCohortDefinition extends BaseCohortDefinition {
 	
 }

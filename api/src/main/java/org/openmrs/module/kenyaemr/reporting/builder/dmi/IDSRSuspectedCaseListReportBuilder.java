@@ -68,19 +68,20 @@ public class IDSRSuspectedCaseListReportBuilder extends AbstractReportBuilder {
     protected List<Mapped<DataSetDefinition>> buildDataSets(ReportDescriptor descriptor, ReportDefinition report) {
         return Arrays.asList(ReportUtils.map(idsrSuspectedCasesDataSetDefinitionColumns(),
                         "startDate=${startDate},endDate=${endDate}"),ReportUtils.map(caseIdentificationClassificationIndicators(),
-                        "startDate=${startDate},endDate=${endDate}"), /*ReportUtils.map(dysenteryDataSetDefinitionColumns(),
-                        "startDate=${startDate},endDate=${endDate}"), ReportUtils.map(
-                        choleraDataSetDefinitionColumns(), "startDate=${startDate},endDate=${endDate}"),*/
+                        "startDate=${startDate},endDate=${endDate}"),
                 ReportUtils.map(iliDataSetDefinitionColumns(),
                         "startDate=${startDate},endDate=${endDate}"), ReportUtils.map(
-                        sariDataSetDefinitionColumns(), "startDate=${startDate},endDate=${endDate}")
-                /*ReportUtils.map(riftValleyFeverDataSetDefinitionColumns(),
+                        sariDataSetDefinitionColumns(), "startDate=${startDate},endDate=${endDate}"),
+                ReportUtils.map(dysenteryDataSetDefinitionColumns(),
+                        "startDate=${startDate},endDate=${endDate}"), ReportUtils.map(
+                        choleraDataSetDefinitionColumns(), "startDate=${startDate},endDate=${endDate}"),
+                ReportUtils.map(riftValleyFeverDataSetDefinitionColumns(),
                         "startDate=${startDate},endDate=${endDate}"), ReportUtils.map(
                         malariaDataSetDefinitionColumns(), "startDate=${startDate},endDate=${endDate}"),
                 ReportUtils.map(chikungunyaDataSetDefinitionColumns(), "startDate=${startDate},endDate=${endDate}"),
                 ReportUtils.map(poliomyelitisDataSetDefinitionColumns(), "startDate=${startDate},endDate=${endDate}"),
                 ReportUtils.map(viralHaemorrhagicFeverDataSetDefinitionColumns(), "startDate=${startDate},endDate=${endDate}"),
-                ReportUtils.map(measlesDataSetDefinitionColumns(), "startDate=${startDate},endDate=${endDate}")*/);
+                ReportUtils.map(measlesDataSetDefinitionColumns(), "startDate=${startDate},endDate=${endDate}"));
     }
 
     protected DataSetDefinition caseIdentificationClassificationIndicators() {
@@ -90,15 +91,15 @@ public class IDSRSuspectedCaseListReportBuilder extends AbstractReportBuilder {
         cohortDsd.addParameter(new Parameter("endDate", "End Date", Date.class));
 
         String indParams = "startDate=${startDate},endDate=${endDate}";
-      /*  cohortDsd.addColumn("Dysentery", "",
+        cohortDsd.addColumn("Dysentery", "",
                 ReportUtils.map(idsrIndicatorLibrary.dysenteryCases(), indParams), "");
         cohortDsd.addColumn("Cholera", "",
-                ReportUtils.map(idsrIndicatorLibrary.choleraCases(), indParams), "");*/
+                ReportUtils.map(idsrIndicatorLibrary.choleraCases(), indParams), "");
         cohortDsd.addColumn("ILI", "",
                 ReportUtils.map(idsrIndicatorLibrary.iliCases(), indParams), "");
         cohortDsd.addColumn("SARI", "",
                 ReportUtils.map(idsrIndicatorLibrary.sariCases(), indParams), "");
-       /* cohortDsd.addColumn(
+        cohortDsd.addColumn(
                 "Riftvalley Fever", "",
                 ReportUtils.map(idsrIndicatorLibrary.riftvalleyFeverCases(), indParams), "");
         cohortDsd.addColumn(
@@ -114,7 +115,7 @@ public class IDSRSuspectedCaseListReportBuilder extends AbstractReportBuilder {
                 "", ReportUtils.map(idsrIndicatorLibrary.viralHaemorrhagicFeverCases(), indParams), "");
         cohortDsd.addColumn(
                 "Measles",
-                "", ReportUtils.map(idsrIndicatorLibrary.measlesCases(), indParams), "");*/
+                "", ReportUtils.map(idsrIndicatorLibrary.measlesCases(), indParams), "");
 
         return cohortDsd;
     }

@@ -125,18 +125,17 @@ public class DatimCohortLibrary {
                 "from (select fup.visit_date,\n" +
                 "             fup.patient_id,\n" +
                 "             max(e.visit_date)                                                                as enroll_date,\n" +
-                "             mid(max(concat(e.visit_date, e.patient_type)), 11)  as patient_type,\n" +
                 "             greatest(max(fup.visit_date), ifnull(max(d.visit_date), '0000-00-00'))           as latest_vis_date,\n" +
                 "             greatest(mid(max(concat(fup.visit_date, fup.next_appointment_date)), 11),\n" +
                 "                      ifnull(max(d.visit_date), '0000-00-00'))                                as latest_tca,\n" +
                 "             d.patient_id                                                                     as disc_patient,\n" +
                 "             d.effective_disc_date                                                            as effective_disc_date,\n" +
                 "             max(d.visit_date)                                                                as date_discontinued,\n" +
-                "             mid(max(concat(date(de.date_started), ifnull(de.discontinued, 0))), 11) as on_drugs\n" +
+                "             de.patient_id                                                   as started_on_drugs\n" +
                 "      from kenyaemr_etl.etl_patient_hiv_followup fup\n" +
                 "               join kenyaemr_etl.etl_patient_demographics p on p.patient_id = fup.patient_id\n" +
                 "               join kenyaemr_etl.etl_hiv_enrollment e on fup.patient_id=e.patient_id\n" +
-                "                           inner join kenyaemr_etl.etl_drug_event de\n" +
+                "                           left join kenyaemr_etl.etl_drug_event de\n" +
                 "                          on e.patient_id = de.patient_id and de.program = 'HIV' and date(de.date_started) <= date(:endDate)\n" +
                 "               left outer JOIN\n" +
                 "           (select patient_id,\n" +
@@ -148,7 +147,7 @@ public class DatimCohortLibrary {
                 "            group by patient_id) d on d.patient_id = fup.patient_id\n" +
                 "      where fup.visit_date <= date(:endDate)\n" +
                 "      group by patient_id\n" +
-                "      having patient_type != 164931 and on_drugs != 1\n" +
+                "      having (started_on_drugs is not null and started_on_drugs <> '')\n" +
                 "         and (\n" +
                 "          (\n" +
                 "                  (timestampdiff(DAY, date(latest_tca), date(:endDate)) <= 30 and\n" +
@@ -4448,19 +4447,17 @@ public class DatimCohortLibrary {
                 "               from (select fup.visit_date,\n" +
                 "                            fup.patient_id,\n" +
                 "                            max(e.visit_date)                                                      as enroll_date,\n" +
-                "                            mid(max(concat(e.visit_date, e.patient_type)), 11)  as patient_type,\n" +
                 "                            greatest(max(fup.visit_date), ifnull(max(d.visit_date), '0000-00-00')) as latest_vis_date,\n" +
                 "                            greatest(mid(max(concat(fup.visit_date, fup.next_appointment_date)), 11),\n" +
                 "                                     ifnull(max(d.visit_date), '0000-00-00'))                      as latest_tca,\n" +
                 "                            d.patient_id                                                           as disc_patient,\n" +
                 "                            d.effective_disc_date                                                  as effective_disc_date,\n" +
                 "                            max(d.visit_date)                                                      as date_discontinued,\n" +
-                "                            de.patient_id                                                          as started_on_drugs,\n" +
-                "                            mid(max(concat(date(de.date_started), ifnull(de.discontinued, 0))), 11) as on_drugs\n" +
+                "                            de.patient_id                                                          as started_on_drugs\n" +
                 "                     from kenyaemr_etl.etl_patient_hiv_followup fup\n" +
                 "                              join kenyaemr_etl.etl_patient_demographics p on p.patient_id = fup.patient_id\n" +
                 "                              join kenyaemr_etl.etl_hiv_enrollment e on fup.patient_id = e.patient_id\n" +
-                "                              inner join kenyaemr_etl.etl_drug_event de on e.patient_id = de.patient_id and de.program = 'HIV' and\n" +
+                "                              left join kenyaemr_etl.etl_drug_event de on e.patient_id = de.patient_id and de.program = 'HIV' and\n" +
                 "                                                                                date(date_started) < date(:endDate)\n" +
                 "                              left outer JOIN\n" +
                 "                          (select patient_id,\n" +
@@ -4472,7 +4469,7 @@ public class DatimCohortLibrary {
                 "                           group by patient_id) d on d.patient_id = fup.patient_id\n" +
                 "                     where fup.visit_date < date(:startDate)\n" +
                 "                     group by patient_id\n" +
-                "                     having patient_type != 164931 and on_drugs != 1\n" +
+                "                     having (started_on_drugs is not null and started_on_drugs <> '')\n" +
                 "                        and ((((timestampdiff(DAY, date(latest_tca), date(:startDate)) <=\n" +
                 "                                30) and\n" +
                 "                               ((date(d.effective_disc_date) > date(:startDate) or\n" +

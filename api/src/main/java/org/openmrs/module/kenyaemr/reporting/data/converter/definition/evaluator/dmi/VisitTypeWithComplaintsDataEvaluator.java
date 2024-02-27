@@ -36,7 +36,7 @@ public class VisitTypeWithComplaintsDataEvaluator implements PersonDataEvaluator
         EvaluatedPersonData c = new EvaluatedPersonData(definition, context);
 
         String qry = "select a.patient_id, if(\n" +
-                "e.patient_outcome in (1693,160429) and v.visit_type_id = 1, 'OPD', if(e.patient_outcome = 1654, 'IPD','N/A')) as visit_type\n" +
+                "e.patient_outcome in (1693,160429) or v.visit_type_id = 1, 'OPD', if(e.patient_outcome = 1654 or v.visit_type_id = 2, 'IPD','N/A')) as visit_type\n" +
                 "from (select patient_id, c.complaint as complaint, c.complaint_date as complaint_date, c.visit_date\n" +
                 "      from kenyaemr_etl.etl_allergy_chronic_illness c\n" +
                 "      where date(c.visit_date) between date(:startDate) and date(:endDate)\n" +

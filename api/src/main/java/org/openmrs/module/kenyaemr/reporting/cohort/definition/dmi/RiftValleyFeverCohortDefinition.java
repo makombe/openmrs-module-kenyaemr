@@ -18,7 +18,7 @@ import org.openmrs.module.reporting.evaluation.caching.Caching;
  * Riftvalley fever cohort definition
  */
 @Caching(strategy = ConfigurationPropertyCachingStrategy.class)
-@Localized("reporting.AppointmentsAndAttritionCohortDefinition")
+@Localized("reporting.RiftValleyFeverCohortDefinition")
 public class RiftValleyFeverCohortDefinition extends BaseCohortDefinition {
 	
 }
