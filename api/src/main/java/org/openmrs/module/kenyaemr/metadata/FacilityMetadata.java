@@ -55,20 +55,26 @@ public class FacilityMetadata extends AbstractMetadataBundle {
 	@Override
 	public void install() throws Exception {
 		AdministrationService administrationService = Context.getAdministrationService();
-		final String refreshConfig = (administrationService.getGlobalProperty(EmrConstants.GP_CONFIGURE_FACILITY_LIST_REFRESH_ON_STARTUP));
+		final String refreshConfig = (administrationService
+				.getGlobalProperty(EmrConstants.GP_CONFIGURE_FACILITY_LIST_REFRESH_ON_STARTUP));
 
 		if (StringUtils.isNotEmpty(refreshConfig) && refreshConfig.equalsIgnoreCase("true")) {
 			install(true);
 		} else {
 			System.out.println("Skipping refreshing of the facility list ...");
 		}
-		uninstall(possible(Form.class, "7dbbfe5d-8a5a-4b24-897d-0cc5299c3dbb"), "Operational Status Attribute type deprecated. Now saving in a file");
-		uninstall(possible(Form.class, "68d9200e-a469-482f-8cc8-9d0953a3c917"), "SHA accredited Attribute type deprecated. Now saving in a file");
-		uninstall(possible(Form.class, "8e1ec5d4-4810-466a-9c90-b801bae9d063"), "SHA Facility expiry date Attribute type deprecated. Now saving in a file");
+		uninstall(possible(Form.class, "7dbbfe5d-8a5a-4b24-897d-0cc5299c3dbb"),
+				"Operational Status Attribute type deprecated. Now saving in a file");
+		uninstall(possible(Form.class, "68d9200e-a469-482f-8cc8-9d0953a3c917"),
+				"SHA accredited Attribute type deprecated. Now saving in a file");
+		uninstall(possible(Form.class, "8e1ec5d4-4810-466a-9c90-b801bae9d063"),
+				"SHA Facility expiry date Attribute type deprecated. Now saving in a file");
 	}
 
 	/**
-	 * Provides an install method we can use from unit tests when we don't want to sync the entire facility list
+	 * Provides an install method we can use from unit tests when we don't want to
+	 * sync the entire facility list
+	 * 
 	 * @param full whether or not to run the facility sync
 	 * @throws Exception
 	 */
@@ -76,30 +82,27 @@ public class FacilityMetadata extends AbstractMetadataBundle {
 		install(locationAttributeType(
 				"Master Facility Code", "Unique facility code allocated by the Ministry of Health",
 				RegexValidatedTextDatatype.class, "\\d{5}", 0, 1,
-				_LocationAttributeType.MASTER_FACILITY_CODE
-		));
+				_LocationAttributeType.MASTER_FACILITY_CODE));
 
 		install(locationAttributeType(
 				"Official Landline", "Landline telephone contact number",
 				FreeTextDatatype.class, "", 0, 1,
-				_LocationAttributeType.TELEPHONE_LANDLINE
-		));
+				_LocationAttributeType.TELEPHONE_LANDLINE));
 
 		install(locationAttributeType(
 				"Official Mobile", "Mobile telephone contact number",
 				FreeTextDatatype.class, "", 0, 1,
-				_LocationAttributeType.TELEPHONE_MOBILE
-		));
+				_LocationAttributeType.TELEPHONE_MOBILE));
 
 		install(locationAttributeType(
 				"Official Fax", "Fax telephone number",
 				FreeTextDatatype.class, "", 0, 1,
-				_LocationAttributeType.TELEPHONE_FAX
-		));
+				_LocationAttributeType.TELEPHONE_FAX));
 
 		if (full) {
 			ObjectSource<Location> source = new LocationMflCsvSource("metadata/mfl_2014-05-12.csv");
-			sync(source, mflSynchronization);
+			// Location creation to be handled by by initializer.
+			// sync(source, mflSynchronization);
 		}
 	}
 }
